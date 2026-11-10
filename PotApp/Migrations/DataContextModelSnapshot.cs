@@ -51,10 +51,10 @@ namespace PotApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("PaymentTypeId")
+                    b.Property<int>("OrderStatusId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("StatusId")
+                    b.Property<int>("PaymentTypeId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("SubscriptionId")
@@ -67,6 +67,14 @@ namespace PotApp.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderStatusId");
+
+                    b.HasIndex("PaymentTypeId");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -93,6 +101,10 @@ namespace PotApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
                     b.ToTable("OrderProducts");
                 });
 
@@ -108,7 +120,12 @@ namespace PotApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("OrderStatusId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderStatusId");
 
                     b.ToTable("OrderStatuses");
                 });
@@ -151,13 +168,22 @@ namespace PotApp.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
-                    b.Property<int>("TypeId")
+                    b.Property<int>("ProductTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("SubscriptionProductId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Weight")
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ImageTypeId");
+
+                    b.HasIndex("ProductTypeId");
+
+                    b.HasIndex("SubscriptionProductId");
 
                     b.ToTable("Products");
                 });
@@ -216,6 +242,12 @@ namespace PotApp.Migrations
                     b.Property<int>("StatusId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("SubscriptionProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("SubsriptionStatusId")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("numeric");
 
@@ -223,6 +255,12 @@ namespace PotApp.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SubscriptionProductId");
+
+                    b.HasIndex("SubsriptionStatusId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Subscriptions");
                 });
@@ -299,7 +337,160 @@ namespace PotApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PotApp.Models.Order", b =>
+                {
+                    b.HasOne("PotApp.Models.OrderStatus", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("OrderStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PotApp.Models.PaymentType", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("PaymentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PotApp.Models.Subscription", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("SubscriptionId");
+
+                    b.HasOne("PotApp.Models.User", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PotApp.Models.OrderProduct", b =>
+                {
+                    b.HasOne("PotApp.Models.Order", null)
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PotApp.Models.Product", null)
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PotApp.Models.OrderStatus", b =>
+                {
+                    b.HasOne("PotApp.Models.OrderStatus", null)
+                        .WithMany("OrderStatuses")
+                        .HasForeignKey("OrderStatusId");
+                });
+
+            modelBuilder.Entity("PotApp.Models.Product", b =>
+                {
+                    b.HasOne("PotApp.Models.ImageType", null)
+                        .WithMany("products")
+                        .HasForeignKey("ImageTypeId");
+
+                    b.HasOne("PotApp.Models.ProductType", null)
+                        .WithMany("Products")
+                        .HasForeignKey("ProductTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PotApp.Models.SubscriptionProduct", null)
+                        .WithMany("products")
+                        .HasForeignKey("SubscriptionProductId");
+                });
+
+            modelBuilder.Entity("PotApp.Models.Subscription", b =>
+                {
+                    b.HasOne("PotApp.Models.SubscriptionProduct", null)
+                        .WithMany("subscriptions")
+                        .HasForeignKey("SubscriptionProductId");
+
+                    b.HasOne("PotApp.Models.SubsriptionStatus", null)
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("SubsriptionStatusId");
+
+                    b.HasOne("PotApp.Models.User", null)
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PotApp.Models.User", b =>
+                {
+                    b.HasOne("PotApp.Models.Role", null)
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PotApp.Models.ImageType", b =>
+                {
+                    b.Navigation("products");
+                });
+
+            modelBuilder.Entity("PotApp.Models.Order", b =>
+                {
+                    b.Navigation("OrderProducts");
+                });
+
+            modelBuilder.Entity("PotApp.Models.OrderStatus", b =>
+                {
+                    b.Navigation("OrderStatuses");
+
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("PotApp.Models.PaymentType", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("PotApp.Models.Product", b =>
+                {
+                    b.Navigation("OrderProducts");
+                });
+
+            modelBuilder.Entity("PotApp.Models.ProductType", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("PotApp.Models.Role", b =>
+                {
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("PotApp.Models.Subscription", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("PotApp.Models.SubscriptionProduct", b =>
+                {
+                    b.Navigation("products");
+
+                    b.Navigation("subscriptions");
+                });
+
+            modelBuilder.Entity("PotApp.Models.SubsriptionStatus", b =>
+                {
+                    b.Navigation("Subscriptions");
+                });
+
+            modelBuilder.Entity("PotApp.Models.User", b =>
+                {
+                    b.Navigation("Orders");
+
+                    b.Navigation("Subscriptions");
                 });
 #pragma warning restore 612, 618
         }

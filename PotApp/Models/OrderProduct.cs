@@ -8,5 +8,6 @@
         public int Quantity { get; set; }
         // свойство для хранения цены на момент покупки
         public decimal UnitPrice { get; set; }
+
     }
 }

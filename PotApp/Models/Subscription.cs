@@ -9,5 +9,7 @@
         public int StatusId { get; set; }
         public int PaymentTypeId { get; set; }
         public DateTime DateOfNextDelivery { get; set; }
+
+        public ICollection<Order> Orders { get; set; }
     }
 }

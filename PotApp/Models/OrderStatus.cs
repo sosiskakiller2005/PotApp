@@ -4,5 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public ICollection<Order> Orders { get; set; }
+        public ICollection<OrderStatus> OrderStatuses { get; set; }
     }
 }
