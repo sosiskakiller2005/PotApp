@@ -3,7 +3,7 @@ using PotApp.Models;
 
 namespace PotApp.Data
 {
-    public class DataContext : DbContext
+    public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
     {
         public DbSet<ImageType> ImageTypes { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -18,13 +18,13 @@ namespace PotApp.Data
         public DbSet<SubsriptionStatus> SubsriptionStatuses { get; set; }
         public DbSet<User> Users { get; set; }
 
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
-        {
-            //Database.Migrate();
-        }
+        //public DataContext(DbContextOptions<DataContext> options) : base(options)
+        //{
+        //    //Database.Migrate();
+        //}
 
-        protected DataContext()
-        {
-        }
+        //protected DataContext()
+        //{
+        //}
     }
 }
