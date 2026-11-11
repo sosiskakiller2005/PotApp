@@ -17,7 +17,7 @@ namespace PotApp.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.14")
+                .HasAnnotation("ProductVersion", "10.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -120,12 +120,7 @@ namespace PotApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("OrderStatusId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderStatusId");
 
                     b.ToTable("OrderStatuses");
                 });
@@ -382,13 +377,6 @@ namespace PotApp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PotApp.Models.OrderStatus", b =>
-                {
-                    b.HasOne("PotApp.Models.OrderStatus", null)
-                        .WithMany("OrderStatuses")
-                        .HasForeignKey("OrderStatusId");
-                });
-
             modelBuilder.Entity("PotApp.Models.Product", b =>
                 {
                     b.HasOne("PotApp.Models.ImageType", null)
@@ -444,8 +432,6 @@ namespace PotApp.Migrations
 
             modelBuilder.Entity("PotApp.Models.OrderStatus", b =>
                 {
-                    b.Navigation("OrderStatuses");
-
                     b.Navigation("Orders");
                 });
 
