@@ -10,6 +10,17 @@ public class UsersController(UserService service) : ControllerBase
     public async Task<ActionResult<GetUsersResponse>> GetUsers()
         => Ok(await service.GetUsersAsync());
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<UserDto>> GetUserById(int id)
+    {
+        var user = await service.GetUserByIdAsync(id);
+        if (user is null)
+        {
+            return NotFound("User was not found.");
+        }
+        return Ok(user);
+    }
+
     [HttpPost]
     public async Task<ActionResult<UserDto>> CreateUser(CreateUserRequest request)
     {

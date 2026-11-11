@@ -13,6 +13,23 @@ namespace PotApp.Services
             return new GetProductsResponse(products);
         }
 
+        public async Task<ProductDto?> GetProductByIdAsync(int id)
+        {
+            Product? product = await context.Products.FindAsync(id);
+            if (product is null)
+            {
+                return null;
+            }
+            return new ProductDto(
+                product.Id,
+                product.Name,
+                product.ProductTypeId,
+                product.ImagePath,
+                product.ImageTypeId,
+                product.Price,
+                product.Weight);
+        }
+
         public async Task<ProductDto> CreateProductAsync(CreateProductRequest request)
         {
             var newProduct = new Product

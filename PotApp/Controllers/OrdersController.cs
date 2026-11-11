@@ -13,6 +13,17 @@ namespace PotApp.Controllers
         public async Task<ActionResult<GetOrdersResponse>> GetOrders()
             => Ok(await service.GetOrdersAsync());
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetOrderById(int id)
+        {
+            var order = await service.GetOrderByIdAsync(id);
+            if (order is null)
+            {
+                return NotFound("Order was not found.");
+            }
+            return Ok(order);
+        }
+
         [HttpPost]
         public async Task<ActionResult<CreateOrderRequest>> CreateOrder(CreateOrderRequest request)
         {

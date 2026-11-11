@@ -14,6 +14,17 @@ namespace PotApp.Controllers
         public async Task<ActionResult<GetProductsResponse>> GetProducts()
         => Ok(await service.GetProductsAsync());
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ProductDto>> GetProductById(int id)
+        {
+            var product = await service.GetProductByIdAsync(id);
+            if (product is null)
+            {
+                return NotFound("Product was not found.");
+            }
+            return Ok(product);
+        }   
+
         [HttpPost]
         public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductRequest request)
         {

@@ -16,6 +16,23 @@ namespace PotApp.Services
             return new GetUsersResponse(users);
         }
 
+        public async Task<UserDto?> GetUserByIdAsync(int id)
+        {
+            User? user = await context.Users.FindAsync(id);
+            if (user is null)
+            {
+                return null;
+            }
+            return new UserDto(
+                user.Id,
+                user.Name,
+                user.Email,
+                user.RoleId,
+                user.PhoneNumber,
+                user.Address,
+                user.Password);
+        }
+
         public async Task<UserDto?> CreateUserAsync(CreateUserRequest request)
         {
             bool roleExists = await context.Roles.AnyAsync(r => r.Id == request.RoleId);

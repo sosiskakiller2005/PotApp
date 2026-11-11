@@ -15,6 +15,24 @@ namespace PotApp.Services
             return new GetOrdersResponse(orders);
         }
 
+        public async Task<OrderDto?> GetOrderByIdAsync(int id)
+        {
+            Order? order = await context.Orders.FindAsync(id);
+            if (order is null)
+            {
+                return null;
+            }
+
+            return new OrderDto(
+                order.Id,
+                order.TotalPrice,
+                order.OrderStatusId,
+                order.Address,
+                order.PaymentTypeId,
+                order.UserId,
+                order.SubscriptionId);
+        }
+
         public async Task<CreateOrderRequest> CreateOrderAsync(CreateOrderRequest request)
         {
             var newOrder = new Order
