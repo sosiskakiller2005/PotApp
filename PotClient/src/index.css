@@ -1,2 +1,25 @@
 @import "tailwindcss";
+@import '@fontsource/cormorant-garamond';
+@import '@fontsource/golos-text';
 
+:root {
+    --potGreen: #263D32;
+    --softWhite: #F7F4ED;
+}
+
+main {
+    background-color: var(--softWhite);
+    color: var(--potGreen);
+}
+
+h1 {
+    font-size: 3rem;
+    font-family: 'Cormorant Garamond';
+    font-weight: 500;
+    color: var(--potGreen);
+}
+
+h2 {
+    font-size: 1rem;
+    font-family: "Golos Text";
+}
