@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PotApi.Dtos.ProductDtos;
 using PotApp.Data;
 using PotApp.Dtos.ProductDtos;
 using PotApp.Models;
@@ -9,50 +10,76 @@ namespace PotApp.Services
     {
         public async Task<GetProductsResponse> GetProductsAsync()
         {
-            List<ProductDto> products = await context.Products.Select(p => new ProductDto(p.Id, p.Name, p.ProductTypeId, p.ImagePath, p.ImageTypeId, p.Price, p.Weight)).ToListAsync();
+            var products = await (
+            from p in context.Products
+            join type in context.ProductTypes on p.ProductTypeId equals type.Id
+            join brand in context.Brands on p.BrandId equals brand.Id
+            join country in context.Countries on p.CountryId equals country.Id
+            join roast in context.RoastDegrees on p.RoastDegreeId equals roast.Id
+            select new GetProductResponse(
+                p.Id,
+                p.Name,
+                p.Description,
+                type.Name,
+                p.ImagePath,
+                p.Price,
+                p.Weight,
+                brand.Name,
+                country.Name,
+                roast.Name
+                )
+             ).ToListAsync();
             return new GetProductsResponse(products);
         }
 
-        public async Task<ProductDto?> GetProductByIdAsync(int id)
+        public async Task<GetProductResponse?> GetProductByIdAsync(int id)
         {
             Product? product = await context.Products.FindAsync(id);
             if (product is null)
             {
                 return null;
             }
-            return new ProductDto(
-                product.Id,
+
+            GetProductResponse response = new GetProductResponse(
+                product.Id, 
                 product.Name,
-                product.ProductTypeId,
+                product.Description,
+                context.ProductTypes.FindAsync(product.ProductTypeId).ToString(),
                 product.ImagePath,
-                product.ImageTypeId,
                 product.Price,
-                product.Weight);
+                product.Weight,
+                context.Brands.FindAsync(product.BrandId).ToString(),
+                context.Countries.FindAsync(product.CountryId).ToString(),
+                context.RoastDegrees.FindAsync(product.RoastDegreeId).ToString()
+                );
+
+            return response;
+
         }
 
-        public async Task<ProductDto> CreateProductAsync(CreateProductRequest request)
-        {
-            var newProduct = new Product
-            {
-                Name = request.Name,
-                ProductTypeId = request.ProductTypeId,
-                ImagePath = request.ImagePath,
-                ImageTypeId = request.ImageTypeId,
-                Price = request.Price,
-                Weight = request.Weight
-            };
-            context.Products.Add(newProduct);
-            await context.SaveChangesAsync();
+        //public async Task<ProductDto> CreateProductAsync(CreateProductRequest request)
+        //{
+        //    var newProduct = new Product
+        //    {
+        //        Name = request.Name,
+        //        Description = request.Description,
+        //        ProductTypeId = request.ProductTypeId,
+        //        ImagePath = request.ImagePath,
+        //        Price = request.Price,
+        //        Weight = request.Weight
+        //    };
+        //    context.Products.Add(newProduct);
+        //    await context.SaveChangesAsync();
 
-            return new ProductDto(
-                newProduct.Id,
-                newProduct.Name,
-                newProduct.ProductTypeId,
-                newProduct.ImagePath,
-                newProduct.ImageTypeId,
-                newProduct.Price,
-                newProduct.Weight);
-        }
+        //    return new ProductDto(
+        //        newProduct.Id,
+        //        newProduct.Name,
+        //        newProduct.Description,
+        //        newProduct.ProductTypeId,
+        //        newProduct.ImagePath,
+        //        newProduct.Price,
+        //        newProduct.Weight);
+        //}
 
         public async Task<bool?> DeleteProductAsync(int id)
         {
@@ -74,9 +101,9 @@ namespace PotApp.Services
                 return null;
             }
             product.Name = productDto.Name;
+            product.Description = productDto.Description;
             product.ProductTypeId = productDto.ProductTypeId;
             product.ImagePath = productDto.ImagePath;
-            product.ImageTypeId = productDto.ImageTypeId;
             product.Price = productDto.Price;
             product.Weight = productDto.Weight;
             await context.SaveChangesAsync();

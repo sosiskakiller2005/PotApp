@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using PotApp.Services;
 using PotApp.Dtos.UserDtos;
+using PotApp.Services;
 
 [Route("api/[controller]")]
 [ApiController]

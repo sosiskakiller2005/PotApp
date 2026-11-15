@@ -1,4 +1,4 @@
 ﻿namespace PotApp.Dtos.ProductDtos
 {
-    public record UpdateProductRequest(string? Name, int? ProductTypeId, string? ImagePath, int? ImageTypeId, decimal? Price, decimal? Weight);
+    public record UpdateProductRequest(string? Name, string? Description, int? ProductTypeId, string? ImagePath, decimal? Price, decimal? Weight);
 }

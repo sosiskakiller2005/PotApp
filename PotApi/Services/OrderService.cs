@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PotApp.Data;
 using PotApp.Dtos.OrderDtos;
-using PotApp.Dtos.ProductDtos;
 using PotApp.Models;
 
 
@@ -55,7 +54,7 @@ namespace PotApp.Services
                 newOrder.UserId,
                 newOrder.SubscriptionId);
         }
-        
+
         public async Task<bool?> DeleteOrderAsync(int id)
         {
             var order = await context.Orders.FindAsync(id);

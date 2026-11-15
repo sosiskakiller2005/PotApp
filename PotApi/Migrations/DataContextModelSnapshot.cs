@@ -22,7 +22,28 @@ namespace PotApp.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("PotApp.Models.ImageType", b =>
+            modelBuilder.Entity("PotApi.Models.Brand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Brands");
+                });
+
+            modelBuilder.Entity("PotApi.Models.Country", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,7 +57,24 @@ namespace PotApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ImageTypes");
+                    b.ToTable("Countries");
+                });
+
+            modelBuilder.Entity("PotApi.Models.RoastDegree", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoastDegrees");
                 });
 
             modelBuilder.Entity("PotApp.Models.Order", b =>
@@ -150,11 +188,18 @@ namespace PotApp.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ImagePath")
+                    b.Property<int>("BrandId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CountryId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ImageTypeId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -166,7 +211,7 @@ namespace PotApp.Migrations
                     b.Property<int>("ProductTypeId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("SubscriptionProductId")
+                    b.Property<int>("RoastDegreeId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Weight")
@@ -174,11 +219,13 @@ namespace PotApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ImageTypeId");
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("ProductTypeId");
 
-                    b.HasIndex("SubscriptionProductId");
+                    b.HasIndex("RoastDegreeId");
 
                     b.ToTable("Products");
                 });
@@ -278,6 +325,8 @@ namespace PotApp.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("SubscriptionProducts");
                 });
@@ -379,9 +428,17 @@ namespace PotApp.Migrations
 
             modelBuilder.Entity("PotApp.Models.Product", b =>
                 {
-                    b.HasOne("PotApp.Models.ImageType", null)
-                        .WithMany("products")
-                        .HasForeignKey("ImageTypeId");
+                    b.HasOne("PotApi.Models.Brand", null)
+                        .WithMany("Products")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PotApi.Models.Country", null)
+                        .WithMany("Products")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PotApp.Models.ProductType", null)
                         .WithMany("Products")
@@ -389,15 +446,17 @@ namespace PotApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PotApp.Models.SubscriptionProduct", null)
-                        .WithMany("products")
-                        .HasForeignKey("SubscriptionProductId");
+                    b.HasOne("PotApi.Models.RoastDegree", null)
+                        .WithMany("Products")
+                        .HasForeignKey("RoastDegreeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PotApp.Models.Subscription", b =>
                 {
                     b.HasOne("PotApp.Models.SubscriptionProduct", null)
-                        .WithMany("subscriptions")
+                        .WithMany("Subscriptions")
                         .HasForeignKey("SubscriptionProductId");
 
                     b.HasOne("PotApp.Models.SubsriptionStatus", null)
@@ -411,6 +470,15 @@ namespace PotApp.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PotApp.Models.SubscriptionProduct", b =>
+                {
+                    b.HasOne("PotApp.Models.Product", null)
+                        .WithMany("SubscriptionProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PotApp.Models.User", b =>
                 {
                     b.HasOne("PotApp.Models.Role", null)
@@ -420,9 +488,19 @@ namespace PotApp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PotApp.Models.ImageType", b =>
+            modelBuilder.Entity("PotApi.Models.Brand", b =>
                 {
-                    b.Navigation("products");
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("PotApi.Models.Country", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("PotApi.Models.RoastDegree", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("PotApp.Models.Order", b =>
@@ -443,6 +521,8 @@ namespace PotApp.Migrations
             modelBuilder.Entity("PotApp.Models.Product", b =>
                 {
                     b.Navigation("OrderProducts");
+
+                    b.Navigation("SubscriptionProducts");
                 });
 
             modelBuilder.Entity("PotApp.Models.ProductType", b =>
@@ -462,9 +542,7 @@ namespace PotApp.Migrations
 
             modelBuilder.Entity("PotApp.Models.SubscriptionProduct", b =>
                 {
-                    b.Navigation("products");
-
-                    b.Navigation("subscriptions");
+                    b.Navigation("Subscriptions");
                 });
 
             modelBuilder.Entity("PotApp.Models.SubsriptionStatus", b =>

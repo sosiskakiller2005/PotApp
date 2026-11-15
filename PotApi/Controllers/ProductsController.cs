@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PotApp.Dtos.ProductDtos;
-using PotApp.Dtos.UserDtos;
 using PotApp.Services;
 
 
@@ -23,14 +22,14 @@ namespace PotApp.Controllers
                 return NotFound("Product was not found.");
             }
             return Ok(product);
-        }   
-
-        [HttpPost]
-        public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductRequest request)
-        {
-            var product = await service.CreateProductAsync(request);
-            return StatusCode(StatusCodes.Status201Created, product);
         }
+
+        //[HttpPost]
+        //public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductRequest request)
+        //{
+        //    var product = await service.CreateProductAsync(request);
+        //    return StatusCode(StatusCodes.Status201Created, product);
+        //}
 
         [HttpPut("{id}")]
         public async Task<ActionResult<ProductDto>> UpdateProduct(int id, ProductDto request)
