@@ -1,4 +1,13 @@
-import { createListCollection, Input, Select } from "@chakra-ui/react";
+import {
+  Box,
+  createListCollection,
+  Heading,
+  Input,
+  Select,
+  Text,
+  Checkbox,
+  Slider,
+} from "@chakra-ui/react";
 
 const sortOptions = createListCollection({
   items: [
@@ -9,7 +18,67 @@ const sortOptions = createListCollection({
 
 export default function Filters() {
   return (
-    <div className="flex flex-col gap-5">
+    <Box
+      className="flex flex-col gap-5"
+      fontFamily="Golos Text"
+      pl="5"
+      pr="5"
+      minWidth={200}
+    >
+      <Heading fontSize="20">Фильтры</Heading>
+      <Box>
+        <Text>Обжарка</Text>
+        <Checkbox.Root>
+          <Checkbox.HiddenInput />
+          <Checkbox.Control />
+          <Checkbox.Label>Высокая</Checkbox.Label>
+        </Checkbox.Root>
+        <Checkbox.Root>
+          <Checkbox.HiddenInput />
+          <Checkbox.Control />
+          <Checkbox.Label>Средняя</Checkbox.Label>
+        </Checkbox.Root>
+        <Checkbox.Root>
+          <Checkbox.HiddenInput />
+          <Checkbox.Control />
+          <Checkbox.Label>Низкая</Checkbox.Label>
+        </Checkbox.Root>
+      </Box>
+      <Box>
+        <Text>Страна</Text>
+        <Checkbox.Root>
+          <Checkbox.HiddenInput />
+          <Checkbox.Control />
+          <Checkbox.Label>Бразилия</Checkbox.Label>
+        </Checkbox.Root>
+        <Checkbox.Root>
+          <Checkbox.HiddenInput />
+          <Checkbox.Control />
+          <Checkbox.Label>Колумбия</Checkbox.Label>
+        </Checkbox.Root>
+        <Checkbox.Root>
+          <Checkbox.HiddenInput />
+          <Checkbox.Control />
+          <Checkbox.Label>Росия</Checkbox.Label>
+        </Checkbox.Root>
+      </Box>
+      <Box>
+        <Text>Цена</Text>
+        <Box className="flex flex-row gap-1 min-w-5">
+          <Input></Input>
+          <Input></Input>
+        </Box>
+        <Slider.Root defaultValue={[30, 90]} thumbCollisionBehavior="push">
+
+          <Slider.Control>
+            <Slider.Track bg="{var(--potGreenLite)}">
+              <Slider.Range bg="{var(--potGreen)}" />
+            </Slider.Track>
+            <Slider.Thumbs />
+          </Slider.Control>
+        </Slider.Root>
+      </Box>
+
       <Input placeholder="Поиск..." />
       <Select.Root collection={sortOptions}>
         <Select.Label>Сортировка</Select.Label>
@@ -28,6 +97,6 @@ export default function Filters() {
           </Select.Item>
         ))}
       </Select.Root>
-    </div>
+    </Box>
   );
 }
