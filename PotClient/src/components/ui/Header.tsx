@@ -2,7 +2,6 @@ import {
   Box,
   Heading,
   IconButton,
-  Link,
   List,
   Separator,
   Text,
@@ -11,12 +10,20 @@ import { Tooltip } from "@/components/ui/tooltip";
 import { IoSearchOutline } from "react-icons/io5";
 import { IoPersonOutline } from "react-icons/io5";
 import { IoCartOutline } from "react-icons/io5";
+import { NavLink } from "react-router-dom";
+
+const navLinks = [
+  { to: "/shop", label: "Магазин" },
+  { to: "/subscription", label: "Подписка" },
+  { to: "/about", label: "О нас" },
+  { to: "/delivery", label: "Доставка и оплата" },
+];
 
 export default function Header() {
   return (
     <Box className="flex-col" p="5">
       <Box className="flex flex-row justify-between" pb="1">
-        <div className="p-10">
+        <NavLink to="/" className="p-10 block">
           <Heading
             fontFamily="Cormorant Garamond"
             fontWeight="500"
@@ -27,20 +34,23 @@ export default function Header() {
           <Heading fontFamily="Golos Text" fontWeight="400" pl="2">
             Кофе и немного чая
           </Heading>
-        </div>
+        </NavLink>
         <List.Root className="flex flex-row gap-10" pt="2" unstyled={true}>
-          <List.Item>
-            <Link color="{var(--potGreen)}">Магазин</Link>
-          </List.Item>
-          <List.Item>
-            <Link color="{var(--potGreen)}">Подписка</Link>
-          </List.Item>
-          <List.Item>
-            <Link color="{var(--potGreen)}">О нас</Link>
-          </List.Item>
-          <List.Item>
-            <Link color="{var(--potGreen)}">Доставка и оплата</Link>
-          </List.Item>
+           {navLinks.map(({ to, label }) => (
+            <List.Item key={to}>
+              <NavLink
+                to={to}
+                style={{ color: "var(--potGreen)" }}
+                className={({ isActive }) =>
+                  isActive
+                    ? "font-bold underline underline-offset-4"
+                    : "hover:underline underline-offset-4"
+                }
+              >
+                {label}
+              </NavLink>
+            </List.Item>
+          ))}
         </List.Root>
         <ul className="flex flex-row g-5 justify-evenly">
           <li>
