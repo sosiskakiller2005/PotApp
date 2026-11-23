@@ -4,13 +4,13 @@ export interface Product {
   id: number;
   name: string;
   description: string;
-  productTypeName: string;
-  brandName: string;
-  countryName: string;
-  roastDegreeName: string;
+  productType: string;
   imagePath: string | null;
   price: number;
   weight: number;
+  brand: string;
+  country: string;
+  roastDegree: string;
 }
 
 interface GetProductsResponse {

@@ -24,3 +24,12 @@ h2 {
     font-size: 1rem;
     font-family: "Golos Text";
 }
+
+h3 {
+    font-size: 0.9rem;
+    font-family: "Golos Text";
+}
+
+.card {
+    color: var(--potGreen);
+}
