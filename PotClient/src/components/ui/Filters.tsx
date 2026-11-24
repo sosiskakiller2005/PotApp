@@ -85,7 +85,7 @@ export default function Filters({ value, onChange, priceBounds }: Props) {
       className="flex flex-col gap-5"
       fontFamily="Golos Text"
       pl="5"
-      maxW="200rem"
+      w="200rem"
     >
       <Heading fontSize="20">Фильтры</Heading>
       <Box className="flex flex-col gap-1">
